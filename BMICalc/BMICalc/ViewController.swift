@@ -27,15 +27,23 @@ class ViewController: UIViewController {
     }
 
     @IBAction func bmiCalculation(_ sender: Any) {
+        // BMI 계산 후 출력
         if let heightText = heightField.text, let height = Double(heightText), let weightText = weightField.text, let weight = Double(weightText) {
             // bmi = 체중 / 키^2
             let bmi = weight / ((height/100) * (height/100))
             BMIField.text = numberFormatter.string(from: NSNumber(value: bmi))
         }
+        // 키보드 없애기
+        view.endEditing(true)
     }
     
-    @IBAction func textFieldFinishEdit(_ sender: Any) {
-        print("End!!")
+    // weightField, heightField에서 return 키 눌렀을 때
+    @IBAction func textFieldFinishEdit(_ sender: UITextField) {
+        sender.resignFirstResponder()
+    }
+    
+    @IBAction func textEndEditing(_ sender: Any) {
+        view.endEditing(true)
     }
 }
 
