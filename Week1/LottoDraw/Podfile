@@ -6,5 +6,6 @@ target 'LottoDraw' do
   use_frameworks!
 
   # Pods for LottoDraw
-	pod 'FMDB'
+  pod 'FMDB'
+
 end
