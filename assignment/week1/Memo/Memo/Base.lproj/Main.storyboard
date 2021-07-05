@@ -73,6 +73,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="tableView" destination="Q3X-25-Guk" id="mbp-5E-rk7"/>
                         <outlet property="textField" destination="Ara-ih-7Bq" id="FRA-vT-ce8"/>
                     </connections>
                 </viewController>
