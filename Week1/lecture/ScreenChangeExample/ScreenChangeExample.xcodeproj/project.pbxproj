@@ -16,6 +16,7 @@
 		DB2AFB82269368D700B1BE47 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB2AFB80269368D700B1BE47 /* LaunchScreen.storyboard */; };
 		DB2AFB8E26936E5D00B1BE47 /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2AFB8D26936E5D00B1BE47 /* ThirdViewController.swift */; };
 		DB2AFB922693798600B1BE47 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2AFB912693798600B1BE47 /* SecondViewController.swift */; };
+		DB5CE5632694B171002B13DD /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5CE5622694B171002B13DD /* IntroViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		DB2AFB83269368D700B1BE47 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DB2AFB8D26936E5D00B1BE47 /* ThirdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		DB2AFB912693798600B1BE47 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SecondViewController.swift; path = ../../../../../../../../Documents/SecondViewController.swift; sourceTree = "<group>"; };
+		DB5CE5622694B171002B13DD /* IntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 				DB2AFB79269368D600B1BE47 /* ViewController.swift */,
 				DB2AFB8D26936E5D00B1BE47 /* ThirdViewController.swift */,
 				DB2AFB912693798600B1BE47 /* SecondViewController.swift */,
+				DB5CE5622694B171002B13DD /* IntroViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				DB2AFB7A269368D600B1BE47 /* ViewController.swift in Sources */,
 				DB2AFB76269368D600B1BE47 /* AppDelegate.swift in Sources */,
 				DB2AFB8E26936E5D00B1BE47 /* ThirdViewController.swift in Sources */,
+				DB5CE5632694B171002B13DD /* IntroViewController.swift in Sources */,
 				DB2AFB922693798600B1BE47 /* SecondViewController.swift in Sources */,
 				DB2AFB78269368D600B1BE47 /* SceneDelegate.swift in Sources */,
 			);
