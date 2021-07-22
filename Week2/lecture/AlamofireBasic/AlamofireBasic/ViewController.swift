@@ -28,15 +28,16 @@ class ViewController: UIViewController {
             "app-id": "60efd91549dfc07aec023a46"
         ] // header 정보 전달
 
-        // request 요청
+        // request 요청해서 JSON으로 받아오기
         AF.request("https://dummyapi.io/data/api/user?limit=10", headers: headers).responseJSON { response in
+//          response의 결과에 따라 .success, .failure로 나뉨
             switch response.result {
-            case .success(let data):
+            case .success(let data): // 성공
                 print(data)
                 do {
                     let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
                     let decoder = JSONDecoder() // 디코더 생성
-                    let dummy_data = try decoder.decode(DummyData.self, from: jsonData) // 디코딩
+                    let dummy_data = try decoder.decode(DummyData.self, from: jsonData) // jsonData를 self의 DummyData 타입으로(type: Decodable.Protocol)
                     self.person_data = dummy_data.data
                     self.personCollectionView.reloadData()
                     print("finish parsing")
@@ -44,7 +45,7 @@ class ViewController: UIViewController {
                     debugPrint(error)
                 }
                 
-            case .failure(let data):
+            case .failure(let data): // 실패
                 print("fail")
             }
         }
@@ -58,6 +59,7 @@ extension ViewController:UICollectionViewDataSource {
         return person_data.count
     }
     
+    // 내용
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "personCell", for: indexPath) as! PersonCell
         
@@ -77,6 +79,7 @@ extension ViewController:UICollectionViewDataSource {
     }
 }
 
+// The methods that let you coordinate with a flow layout object to implement a grid-based layout.
 extension ViewController:UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -100,7 +103,6 @@ extension ViewController:UICollectionViewDelegate {
         if let indexPath = self.personCollectionView.indexPathsForSelectedItems?.first {
             let person_info = person_data[indexPath.row]
             print(person_info)
-            
         }
     }
 }

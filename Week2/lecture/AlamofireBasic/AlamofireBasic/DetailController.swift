@@ -22,7 +22,7 @@ class DetailController:UIViewController {
             "app-id": "60efd91549dfc07aec023a46"
         ] // header 정보 전달
 
-        // request 요청
+        // alamofire(AF) request 요청
         AF.request("https://dummyapi.io/data/api/user/\(user_id)", headers: headers).responseJSON { response in
             switch response.result {
             case .success(let data):

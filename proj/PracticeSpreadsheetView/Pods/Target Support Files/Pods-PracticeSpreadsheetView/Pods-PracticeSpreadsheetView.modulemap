@@ -1,0 +1,6 @@
+framework module Pods_PracticeSpreadsheetView {
+  umbrella header "Pods-PracticeSpreadsheetView-umbrella.h"
+
+  export *
+  module * { export * }
+}
