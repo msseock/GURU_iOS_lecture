@@ -11,106 +11,27 @@
 
 // MARK: - GetProperties
 struct GetProperties: Decodable {
-    let spreadsheetID: String
-    let properties: GetPropertiesProperties
-    let sheets: [Sheet]
-    let spreadsheetURL: String
+    var sheets: [Sheet]?
 
     enum CodingKeys: String, CodingKey {
-        case spreadsheetID
-        case properties, sheets
-        case spreadsheetURL
+        case sheets
     }
-}
-
-// MARK: - GetPropertiesProperties
-struct GetPropertiesProperties: Decodable {
-    let title, locale, autoRecalc, timeZone: String
-    let defaultFormat: DefaultFormat
-    let spreadsheetTheme: SpreadsheetTheme
-}
-
-// MARK: - DefaultFormat
-struct DefaultFormat: Decodable {
-    let backgroundColor: BackgroundColorClass
-    let padding: Padding
-    let verticalAlignment, wrapStrategy: String
-    let textFormat: TextFormat
-    let backgroundColorStyle: BackgroundColorStyle
-}
-
-// MARK: - BackgroundColorClass
-struct BackgroundColorClass: Decodable {
-    let red, green, blue: Double?
-}
-
-// MARK: - BackgroundColorStyle
-struct BackgroundColorStyle: Decodable {
-    let rgbColor: BackgroundColorClass
-}
-
-// MARK: - Padding
-struct Padding: Decodable {
-    let top, paddingRight, bottom, paddingLeft: Int
-
-    enum CodingKeys: String, CodingKey {
-        case top
-        case paddingRight
-        case bottom
-        case paddingLeft
-    }
-}
-
-// MARK: - TextFormat
-struct TextFormat: Decodable {
-    let foregroundColor: ForegroundColorClass
-    let fontFamily: String
-    let fontSize: Int
-    let bold, italic, strikethrough, underline: Bool
-    let foregroundColorStyle: ForegroundColorStyle
-}
-
-// MARK: - ForegroundColorClass
-struct ForegroundColorClass: Decodable {
-}
-
-// MARK: - ForegroundColorStyle
-struct ForegroundColorStyle: Decodable {
-    let rgbColor: ForegroundColorClass
-}
-
-// MARK: - SpreadsheetTheme
-struct SpreadsheetTheme: Decodable {
-    let primaryFontFamily: String
-    let themeColors: [ThemeColor]
-}
-
-// MARK: - ThemeColor
-struct ThemeColor: Decodable {
-    let colorType: String
-    let color: BackgroundColorStyle
 }
 
 // MARK: - Sheet
 struct Sheet: Decodable {
-    let properties: SheetProperties
+    var properties: SheetProperties?
 }
 
 // MARK: - SheetProperties
 struct SheetProperties: Decodable {
-    let sheetID: Int
-    let title: String // 받아올 값
-    let index: Int
-    let sheetType: String
-    let gridProperties: GridProperties
+//    var sheetID: Int?
+    var title: String? // 받아올 값
+    var index: Int?
+//    let sheetType: String?
+//    let gridProperties: GridProperties?
 
     enum CodingKeys: String, CodingKey {
-        case sheetID
-        case title, index, sheetType, gridProperties
+        case title, index
     }
-}
-
-// MARK: - GridProperties
-struct GridProperties: Decodable {
-    let rowCount, columnCount: Int
 }

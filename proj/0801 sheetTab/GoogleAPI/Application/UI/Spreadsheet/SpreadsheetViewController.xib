@@ -13,7 +13,7 @@
                 <outlet property="chatBar" destination="aSH-OU-TMd" id="xMp-VJ-7Jn"/>
                 <outlet property="inputBtn" destination="v5E-Vm-9el" id="ySc-6H-A0T"/>
                 <outlet property="inputText" destination="MKd-sX-ykT" id="wKM-Ek-ddZ"/>
-                <outlet property="sheetTabBar" destination="Wk0-Kp-V1s" id="oyU-dp-ZbK"/>
+                <outlet property="toolBar" destination="Wk0-Kp-V1s" id="oyU-dp-ZbK"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="x" destination="Pyk-Vt-AXq" id="iGI-Kl-QnH"/>
                 <outlet property="y" destination="lgw-3y-2aK" id="Chm-c1-FSm"/>

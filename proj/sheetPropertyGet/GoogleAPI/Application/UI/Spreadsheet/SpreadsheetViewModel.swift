@@ -65,23 +65,26 @@ class SpreadsheetViewModel {
         request.httpMethod = "GET"
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        print("request: ", request.allHTTPHeaderFields)
+        print("request header: ", request.allHTTPHeaderFields!)
         
-        URLSession.shared.dataTask(with: request) { data, _, _ in
-            guard let jsonData = data else { return }
-            
-            let decoder = JSONDecoder()
-            guard let spreadsheetProperties = try? decoder.decode(GetProperties.self, from: jsonData) else {
-                print("decode 실패")
-                return }
-            print("spreadsheetProperties: ", spreadsheetProperties.sheets)
-            
-            completion(spreadsheetProperties.sheets)
+        // 만들어둔 request로 http요청 보냄
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // request로 받아온 JSON 데이터
+            if let JSONData = data {
+                do {
+                    let spreadsheetProperties = try JSONDecoder().decode(GetProperties.self, from: JSONData)
+                    completion(spreadsheetProperties.sheets) // GetProperties 중 [Sheet]으로 completion
+                    print("decoding 성공")
+                } catch let jsonError as NSError {
+                    print("JSON decode failed: \(jsonError.localizedDescription)")
+                }
+                return
+            }
         }
         .resume()
     }
     
-    // MARK: POST
+    // MARK: postNewRow
     func postNewRow(withID id: String,
                     withToken token: String,
                     completion: @escaping (URLResponse) -> Void) {
@@ -147,7 +150,7 @@ extension SpreadsheetViewModel {
 //        print("이것도 야매지만 아무튼 property: ", property)
         
         if let sheets = propertySheets {
-            print("title 잘 나왔는지 확인해봐: ", sheets[0].properties.title)
+            print("title 잘 나왔는지 확인해봐: ", sheets[0].properties?.title)
 //            url += id + "/values:batchGet/" + "?access_token=" + token + "&ranges=" + sheets.title + "&majorDimension=ROWS"
         } else {
             print("property가 없다네. 왜 없을까. 니가 코드를 잘못 짰겠지")

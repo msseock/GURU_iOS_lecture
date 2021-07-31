@@ -13,7 +13,7 @@ class SpreadsheetViewController: UIViewController {
     let spreadsheetView = SpreadsheetView()
     var isSheetLoad = false
     var viewModel: SpreadsheetViewModel!
-    @IBOutlet weak var sheetTabBar: UIToolbar!
+    @IBOutlet weak var toolBar: UIToolbar!    
     @IBOutlet weak var chatBar: UIView!
     
     @IBOutlet weak var x: UITextField!
@@ -35,34 +35,33 @@ class SpreadsheetViewController: UIViewController {
         navigationController?.tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.prefersLargeTitles = false
 
-        // MARK: -navigationBarButton
+        // navigationBarButton
         // 시트 내용 저장 Btn
         let saveBtn = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveSheet(_:)))
         navigationItem.rightBarButtonItem = saveBtn
         //self.navigationController?.navigationBar.topItem?.title = ""
         self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.9960784314, green: 0.5960784314, blue: 0, alpha: 1)
 
-        // MARK: -sheetTabBar
         // 상단 toolbar
-        view.addSubview(sheetTabBar)
-        sheetTabBar.barTintColor = #colorLiteral(red: 0.187317878, green: 0.1923363805, blue: 0.2093544602, alpha: 1)
+        view.addSubview(toolBar)
+        toolBar.barTintColor = #colorLiteral(red: 0.187317878, green: 0.1923363805, blue: 0.2093544602, alpha: 1)
         //toolBar.backgroundColor = #colorLiteral(red: 0.187317878, green: 0.1923363805, blue: 0.2093544602, alpha: 1)
         let tab = UIBarButtonItem()
         tab.title = "TABS"
         tab.tintColor = .white
-        sheetTabBar.setItems([tab], animated: true)
+        toolBar.setItems([tab], animated: true)
         
-        sheetTabBar.translatesAutoresizingMaskIntoConstraints = false
-        sheetTabBar.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 0).isActive = true
-        sheetTabBar.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 0).isActive = true
-        sheetTabBar.trailingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.trailingAnchor, multiplier: 0).isActive = true
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        toolBar.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 0).isActive = true
+        toolBar.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 0).isActive = true
+        toolBar.trailingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.trailingAnchor, multiplier: 0).isActive = true
         
     
         // spreadsheet 추가 & constraint 설정
         view.addSubview(spreadsheetView)
 //        spreadsheetView.frame = CGRect(x: 0, y: 0 , width: view.frame.size.width, height: view.frame.size.height)
         spreadsheetView.translatesAutoresizingMaskIntoConstraints = false
-        spreadsheetView.topAnchor.constraint(equalToSystemSpacingBelow: sheetTabBar.bottomAnchor, multiplier: 0).isActive = true
+        spreadsheetView.topAnchor.constraint(equalToSystemSpacingBelow: toolBar.bottomAnchor, multiplier: 0).isActive = true
         spreadsheetView.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
         spreadsheetView.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
         // 스크롤 포-기
@@ -71,7 +70,7 @@ class SpreadsheetViewController: UIViewController {
         self.title = viewModel.fileName
         
         
-        // MARK: -chatBar
+        // chatBar
         view.addSubview(chatBar)
 //        chatBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         chatBar.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
@@ -81,7 +80,7 @@ class SpreadsheetViewController: UIViewController {
         y.layer.cornerRadius = 0.25 * y.bounds.size.width
         
         
-        // MARK: -keyboard
+        // keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }

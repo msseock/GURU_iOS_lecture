@@ -39,8 +39,7 @@ class SpreadsheetViewController: UIViewController {
     private func getFileProperty() {
         viewModel.getSpreadsheetProperties(withID: viewModel.driveFile.id, withToken: GoogleService.accessToken) { sheetsProperties in
             guard let properties = sheetsProperties else { return }
-            print("getSpreadsheetProperties로 받아온 property들: ", properties)
-//            self.viewModel.sheetsProperties = properties // sheetProperties가 완성됨
+            self.viewModel.propertySheets = properties // propertySheets가 완성됨
         }
     }
     
