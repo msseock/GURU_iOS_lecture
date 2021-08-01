@@ -6,15 +6,20 @@
 //  Copyright © 2019 BytePace. All rights reserved.
 //
 
+// 0801 최종수정일
+
 import UIKit
 import SpreadsheetView
 
 class SpreadsheetViewController: UIViewController {
     let spreadsheetView = SpreadsheetView()
-    var isSheetLoad = false
+    var isSheetPropertyLoad:Bool = false
+    var isSheetLoad:Bool = false
     var viewModel: SpreadsheetViewModel!
-    @IBOutlet weak var toolBar: UIToolbar!    
+    // 내가 바꿀 부분 툴바에서 컬렉션뷰나 그냥 뷰로 해서 버튼 목록으로 띄우기
+    @IBOutlet weak var tabBar: UIView!
     @IBOutlet weak var chatBar: UIView!
+    @IBOutlet var tabCollectionView: UICollectionView?
     
     @IBOutlet weak var x: UITextField!
     @IBOutlet weak var y: UITextField!
@@ -27,6 +32,12 @@ class SpreadsheetViewController: UIViewController {
     // MARK: viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 순서 바꿈
+        getFileProperty()   // 시트 파일 속성 받아오기
+        getFiles()          // 시트 내용 받아오기(valueRange)
+        self.title = viewModel.fileName
+        
         spreadsheetView.register(SpreadsheetViewCell.self, forCellWithReuseIdentifier: SpreadsheetViewCell.identifier)
         spreadsheetView.dataSource = self
         
@@ -36,38 +47,69 @@ class SpreadsheetViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = false
 
         // navigationBarButton
-        // 시트 내용 저장 Btn
+        // MARK: 시트 내용 저장 Btn
         let saveBtn = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveSheet(_:)))
         navigationItem.rightBarButtonItem = saveBtn
         //self.navigationController?.navigationBar.topItem?.title = ""
         self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.9960784314, green: 0.5960784314, blue: 0, alpha: 1)
 
-        // 상단 toolbar
-        view.addSubview(toolBar)
-        toolBar.barTintColor = #colorLiteral(red: 0.187317878, green: 0.1923363805, blue: 0.2093544602, alpha: 1)
-        //toolBar.backgroundColor = #colorLiteral(red: 0.187317878, green: 0.1923363805, blue: 0.2093544602, alpha: 1)
-        let tab = UIBarButtonItem()
-        tab.title = "TABS"
-        tab.tintColor = .white
-        toolBar.setItems([tab], animated: true)
+        // MARK: 상단 tab bar
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) // The margins used to lay out content in a section.
+        layout.itemSize = CGSize(width: 60, height: 25)
+        layout.scrollDirection = .horizontal
         
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
-        toolBar.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 0).isActive = true
-        toolBar.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 0).isActive = true
-        toolBar.trailingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.trailingAnchor, multiplier: 0).isActive = true
+        tabCollectionView = UICollectionView(frame: tabBar.frame, collectionViewLayout: layout)
+        tabCollectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "tabCell") // tabCell로 콜렉션뷰 셀 구성
+        tabCollectionView?.backgroundColor = #colorLiteral(red: 0.187317878, green: 0.1923363805, blue: 0.2093544602, alpha: 1)
+        
+        
+        // 임시로 처리해둠. 정 안되면 이 코드 써야지 뭐...
+        while isSheetPropertyLoad == false {
+//            print("isSheetPropertyLoad가 false여서 while문 도는 중")
+            while isSheetPropertyLoad == true {
+                print("isSheetPropertyLoad가 true여서 tabCollectionView 처리중")
+                tabCollectionView?.dataSource = self
+                tabCollectionView?.delegate = self
+                break
+            }
+        }
+        
+//        // 테스트용으로 일단 주석처리해둠. 안되면 다시 복구할 예정
+//        tabCollectionView?.dataSource = self
+//        tabCollectionView?.delegate = self
+        
+        tabBar.addSubview(tabCollectionView ?? UICollectionView())
+        
+        
+        // 기존 코드
+//        view.addSubview(tabBar)
+//        tabBar.barTintColor = #colorLiteral(red: 0.187317878, green: 0.1923363805, blue: 0.2093544602, alpha: 1)
+//        //toolBar.backgroundColor = #colorLiteral(red: 0.187317878, green: 0.1923363805, blue: 0.2093544602, alpha: 1)
+//        let tab = UIBarButtonItem()
+//        tab.title = "TABS"
+//        tab.tintColor = .white
+//        tabBar.setItems([tab], animated: true)
+        
+        tabBar.translatesAutoresizingMaskIntoConstraints = false
+        tabBar.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 0).isActive = true
+        tabBar.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 0).isActive = true
+        tabBar.trailingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.trailingAnchor, multiplier: 0).isActive = true
         
     
-        // spreadsheet 추가 & constraint 설정
+        // MARK: spreadsheet 추가 & constraint 설정
         view.addSubview(spreadsheetView)
 //        spreadsheetView.frame = CGRect(x: 0, y: 0 , width: view.frame.size.width, height: view.frame.size.height)
         spreadsheetView.translatesAutoresizingMaskIntoConstraints = false
-        spreadsheetView.topAnchor.constraint(equalToSystemSpacingBelow: toolBar.bottomAnchor, multiplier: 0).isActive = true
+        spreadsheetView.topAnchor.constraint(equalToSystemSpacingBelow: tabBar.bottomAnchor, multiplier: 0).isActive = true
         spreadsheetView.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
         spreadsheetView.heightAnchor.constraint(equalToConstant: view.frame.size.height).isActive = true
         // 스크롤 포-기
 
-        getFiles()
-        self.title = viewModel.fileName
+        // 잠깐 순서 좀 바꿔보자
+//        getFileProperty()   // 시트 파일 속성 받아오기
+//        getFiles()          // 시트 내용 받아오기(valueRange)
+//        self.title = viewModel.fileName
         
         
         // chatBar
@@ -185,7 +227,18 @@ class SpreadsheetViewController: UIViewController {
         }
     }
     
-    // MARK: sheet value 받아오기
+    // MARK: getFileProperty
+    // SheetProperties.swift를 viewModel의 getSpreadsheetProperties()를 이용해서 설정
+    private func getFileProperty() {
+        viewModel.getSpreadsheetProperties(withID: viewModel.driveFile.id, withToken: GoogleService.accessToken) { sheetsProperties in
+            guard let properties = sheetsProperties else { return }
+            self.viewModel.propertySheets = properties // propertySheets가 완성됨
+            print("property sheets count: ", self.viewModel.propertySheets?.count)
+            self.isSheetPropertyLoad = true
+        }
+    }
+    
+    // MARK: getFiles
     private func getFiles() {
         viewModel.getSpreadsheetValues(withID: viewModel.driveFile.id, withToken: GoogleService.accessToken, GETorPOST: "GET") { sheet in
             guard let sheet = sheet else { return }
@@ -198,6 +251,36 @@ class SpreadsheetViewController: UIViewController {
         }
     }
 }
+
+// MARK: UICollectionViewDataSource
+extension SpreadsheetViewController: UICollectionViewDataSource {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let tabCount = viewModel.propertySheets?.count {
+            print("tabCount 받아오기 성공")
+            return tabCount
+        }
+        else {
+            print("tabCount 받아오기 fail")
+            return 3
+            
+        }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "tabCell", for: indexPath)
+        cell.backgroundColor = #colorLiteral(red: 0.9960784314, green: 0.5960784314, blue: 0, alpha: 1)
+        cell.layer.cornerRadius = 10
+        return cell
+    }
+}
+   
+// MARK: UICollectionViewDelegate
+extension SpreadsheetViewController: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("select collection view cell item")
+    }
+}
+
 
 // MARK: SpreadsheetViewDataSource
 extension SpreadsheetViewController: SpreadsheetViewDataSource {

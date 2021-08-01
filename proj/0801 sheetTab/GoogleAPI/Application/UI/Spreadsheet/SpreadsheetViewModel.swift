@@ -12,6 +12,7 @@ class SpreadsheetViewModel {
     var fileName: String
     var driveFile: File
     var sheet: ValueRange?
+    var propertySheets: [Sheet]?
     
     private var spreadsheetID: String
     
@@ -24,7 +25,7 @@ class SpreadsheetViewModel {
         self.spreadsheetID = file.id
     }
     
-    // MARK: 스프레드시트 가져오기
+    // MARK: getSpreadsheetValues
     func getSpreadsheetValues(withID id: String,
                         withToken token: String,
                         GETorPOST httpRequestMethod: String,
@@ -34,7 +35,7 @@ class SpreadsheetViewModel {
         case "GET":
             print("httpRequestMethod: GET")
             // 요청할 내용대로 url에 담도록 batchGetStringURL() 호출
-            guard let url = URL(string: getStringURL(fromID: id, withToken: token)) else { return }
+            guard let url = URL(string: getStringURLForBatchGet(fromID: id, withToken: token)) else { return }
             
             // 생성해둔 url, get 방식으로 URLRequest 생성
             var request = URLRequest(url: url)
@@ -60,6 +61,39 @@ class SpreadsheetViewModel {
         }
     }
     
+    // MARK: getSpreadsheetProperties
+    func getSpreadsheetProperties(withID id: String,
+                        withToken token: String,
+                        completion: @escaping ([Sheet]?) -> Void) {
+        // 요청할 내용대로 url에 담도록 getStringURLForGet() 호출
+        guard let url = URL(string: getStringURLForGet(fromID: id, withToken: token)) else { return }
+        print("property get url: ", url)
+        
+        // 생성해둔 url, get 방식으로 URLRequest 생성
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        print("request header: ", request.allHTTPHeaderFields!)
+        
+        // 만들어둔 request로 http요청 보냄
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // request로 받아온 JSON 데이터
+            if let JSONData = data {
+                do {
+                    let spreadsheetProperties = try JSONDecoder().decode(GetProperties.self, from: JSONData)
+                    completion(spreadsheetProperties.sheets) // GetProperties 중 [Sheet]으로 completion
+                    print("decoding 성공")
+                } catch let jsonError as NSError {
+                    print("JSON decode failed: \(jsonError.localizedDescription)")
+                }
+                return
+            }
+        }
+        .resume()
+    }
+    
+    // MARK: postNewRow
     func postNewRow(withID id: String,
                     withToken token: String,
                     completion: @escaping (URLResponse) -> Void) {
@@ -83,6 +117,7 @@ class SpreadsheetViewModel {
 }
 
 extension SpreadsheetViewModel {
+    // MARK: getParameters
     private func getParameters(withID id: String,
                                withToken token: String,
                                completion: @escaping (Data) -> Void) {
@@ -106,6 +141,7 @@ extension SpreadsheetViewModel {
         
     }
     
+    // MARK: getRange
     private func getRange(withID id: String,
                           withToken token: String,
                           completion: @escaping (String) -> Void) {
@@ -131,9 +167,18 @@ extension SpreadsheetViewModel {
         completion(range)
     }
     
-    private func getStringURL(fromID id: String, withToken token: String) -> String {
+    // MARK: getStringURLForBatchGet
+    private func getStringURLForBatchGet(fromID id: String, withToken token: String) -> String {
         var url = "https://sheets.googleapis.com/v4/spreadsheets/"
         url += id + "/values:batchGet/" + "?access_token=" + token + "&ranges=A1:N&majorDimension=ROWS" //A1:C => A1:끝값 범위가 충분히 넓으면 다 뜸
+        return url
+    }
+    
+    // MARK: getStringURLForGet
+    // get(시트 property 받는 용도)
+    private func getStringURLForGet(fromID id: String, withToken token: String) -> String {
+        var url = "https://sheets.googleapis.com/v4/spreadsheets/"
+        url += id
         return url
     }
     
