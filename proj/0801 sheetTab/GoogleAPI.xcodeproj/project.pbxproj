@@ -17,6 +17,7 @@
 		2063BEB7235895930019E3D7 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2063BEB6235895930019E3D7 /* Router.swift */; };
 		206F2B632359C7D200AB8505 /* FakeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206F2B622359C7D200AB8505 /* FakeService.swift */; };
 		9E13D37FE717C4BBF955FE9C /* Pods_GoogleAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294932E448C53A6A569B0690 /* Pods_GoogleAPI.framework */; };
+		C5077DE326B7DA160077DFC0 /* TabCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5077DE226B7DA160077DFC0 /* TabCell.swift */; };
 		C5F7BF6526B5C0EF009348BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5F7BF6426B5C0EF009348BF /* GoogleService-Info.plist */; };
 		FE538FAA26B144690051E880 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE538FA926B144680051E880 /* Main.storyboard */; };
 		FE538FAC26B146690051E880 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE538FAB26B146690051E880 /* MainTabBarController.swift */; };
@@ -77,6 +78,7 @@
 		294932E448C53A6A569B0690 /* Pods_GoogleAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GoogleAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0AAA39D75D5827E1E0C125 /* Pods-GoogleAPI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GoogleAPI.debug.xcconfig"; path = "Target Support Files/Pods-GoogleAPI/Pods-GoogleAPI.debug.xcconfig"; sourceTree = "<group>"; };
 		3483EFA13FF686359F411E5F /* Pods-GoogleAPI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GoogleAPI.release.xcconfig"; path = "Target Support Files/Pods-GoogleAPI/Pods-GoogleAPI.release.xcconfig"; sourceTree = "<group>"; };
+		C5077DE226B7DA160077DFC0 /* TabCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCell.swift; sourceTree = "<group>"; };
 		C5F7BF6426B5C0EF009348BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FE538FA926B144680051E880 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		FE538FAB26B146690051E880 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				FE53902326B2A88E0051E880 /* SpreadsheetViewController.swift */,
 				FE53902226B2A88E0051E880 /* SpreadsheetViewController.xib */,
 				FE53902426B2A88E0051E880 /* SpreadsheetViewModel.swift */,
+				C5077DE226B7DA160077DFC0 /* TabCell.swift */,
 			);
 			path = Spreadsheet;
 			sourceTree = "<group>";
@@ -541,6 +544,7 @@
 				FE538FEE26B2973A0051E880 /* PersonCellController.swift in Sources */,
 				2063BEB523588E2A0019E3D7 /* GoogleService.swift in Sources */,
 				FE53902C26B2A8DD0051E880 /* Spreadsheet.swift in Sources */,
+				C5077DE326B7DA160077DFC0 /* TabCell.swift in Sources */,
 				FE538FD726B192B90051E880 /* UIView+Additions.swift in Sources */,
 				2063BEAB235872CF0019E3D7 /* NibIdentifiable.swift in Sources */,
 				FE53902726B2A88E0051E880 /* SpreadsheetViewModel.swift in Sources */,
@@ -696,7 +700,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ZUGAVD3728;
 				INFOPLIST_FILE = GoogleAPI/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -715,7 +719,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ZUGAVD3728;
 				INFOPLIST_FILE = GoogleAPI/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

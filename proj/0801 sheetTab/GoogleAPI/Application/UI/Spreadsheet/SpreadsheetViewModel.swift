@@ -29,6 +29,7 @@ class SpreadsheetViewModel {
     func getSpreadsheetValues(withID id: String,
                         withToken token: String,
                         GETorPOST httpRequestMethod: String,
+                        withTabNumber tabNumber:Int,
                         completion: @escaping (ValueRange?) -> Void) {
         
         switch httpRequestMethod {
@@ -47,7 +48,7 @@ class SpreadsheetViewModel {
                 let decoder = JSONDecoder()
                 guard let spreadsheet = try? decoder.decode(Spreadsheet.self, from: jsonData) else { return }
                 
-                completion(spreadsheet.valueRanges.first)
+                completion(spreadsheet.valueRanges[tabNumber-1]) // tabNumber번째의 sheet valueRange를 불러옴
             }
             .resume()
             

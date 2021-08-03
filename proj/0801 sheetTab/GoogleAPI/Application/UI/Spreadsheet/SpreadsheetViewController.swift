@@ -35,7 +35,7 @@ class SpreadsheetViewController: UIViewController {
         
         // 순서 바꿈
         getFileProperty()   // 시트 파일 속성 받아오기
-        getFiles()          // 시트 내용 받아오기(valueRange)
+        getFiles(withTabNumber: 1)          // 시트 내용 받아오기(valueRange)
         self.title = viewModel.fileName
         
         spreadsheetView.register(SpreadsheetViewCell.self, forCellWithReuseIdentifier: SpreadsheetViewCell.identifier)
@@ -64,20 +64,20 @@ class SpreadsheetViewController: UIViewController {
         tabCollectionView?.backgroundColor = #colorLiteral(red: 0.187317878, green: 0.1923363805, blue: 0.2093544602, alpha: 1)
         
         
-        // 임시로 처리해둠. 정 안되면 이 코드 써야지 뭐...
-        while isSheetPropertyLoad == false {
-//            print("isSheetPropertyLoad가 false여서 while문 도는 중")
-            while isSheetPropertyLoad == true {
-                print("isSheetPropertyLoad가 true여서 tabCollectionView 처리중")
-                tabCollectionView?.dataSource = self
-                tabCollectionView?.delegate = self
-                break
-            }
-        }
+//        // 임시처리용
+//        while isSheetPropertyLoad == false {
+////            print("isSheetPropertyLoad가 false여서 while문 도는 중")
+//            while isSheetPropertyLoad == true {
+//                print("isSheetPropertyLoad가 true여서 tabCollectionView 처리중")
+//                tabCollectionView?.dataSource = self
+//                tabCollectionView?.delegate = self
+//                break
+//            }
+//        }
         
-//        // 테스트용으로 일단 주석처리해둠. 안되면 다시 복구할 예정
-//        tabCollectionView?.dataSource = self
-//        tabCollectionView?.delegate = self
+        // 바로 위 코드 복구 버전
+        tabCollectionView?.dataSource = self
+        tabCollectionView?.delegate = self
         
         tabBar.addSubview(tabCollectionView ?? UICollectionView())
         
@@ -215,7 +215,7 @@ class SpreadsheetViewController: UIViewController {
         print("Push save button")
         viewModel.postNewRow(withID: viewModel.driveFile.id, withToken: GoogleService.accessToken) { _ in
             // post 끝나고 view에 띄울 값들 정하는 부분
-            self.viewModel.getSpreadsheetValues(withID: self.viewModel.driveFile.id, withToken: GoogleService.accessToken, GETorPOST: "POST") { sheet in
+            self.viewModel.getSpreadsheetValues(withID: self.viewModel.driveFile.id, withToken: GoogleService.accessToken, GETorPOST: "POST", withTabNumber: 1) { sheet in
                 guard let sheet = sheet else { return }
                 print("postNewRow하고 나서 getSpreadsheetValues로 받아온 sheet: ", sheet)
                 self.viewModel.sheet = sheet
@@ -235,12 +235,16 @@ class SpreadsheetViewController: UIViewController {
             self.viewModel.propertySheets = properties // propertySheets가 완성됨
             print("property sheets count: ", self.viewModel.propertySheets?.count)
             self.isSheetPropertyLoad = true
+            
+            DispatchQueue.main.async {
+                self.tabCollectionView?.reloadData()
+            }
         }
     }
     
     // MARK: getFiles
-    private func getFiles() {
-        viewModel.getSpreadsheetValues(withID: viewModel.driveFile.id, withToken: GoogleService.accessToken, GETorPOST: "GET") { sheet in
+    private func getFiles(withTabNumber tabNumber:Int) {
+        viewModel.getSpreadsheetValues(withID: viewModel.driveFile.id, withToken: GoogleService.accessToken, GETorPOST: "GET", withTabNumber: tabNumber) { sheet in
             guard let sheet = sheet else { return }
             self.viewModel.sheet = sheet
             self.isSheetLoad = true
@@ -261,15 +265,17 @@ extension SpreadsheetViewController: UICollectionViewDataSource {
         }
         else {
             print("tabCount 받아오기 fail")
-            return 3
+            return 1
             
         }
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "tabCell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "tabCell", for: indexPath)// as! TabCell
         cell.backgroundColor = #colorLiteral(red: 0.9960784314, green: 0.5960784314, blue: 0, alpha: 1)
         cell.layer.cornerRadius = 10
+        // 나중에 된다면 채워넣을 코드
+//        cell.sheetTabName.text = viewModel.propertySheets![indexPath.row].properties?.title
         return cell
     }
 }
@@ -277,6 +283,8 @@ extension SpreadsheetViewController: UICollectionViewDataSource {
 // MARK: UICollectionViewDelegate
 extension SpreadsheetViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("indexPath: ", indexPath)
+//        getFiles(withTabNumber: indexPath)
         print("select collection view cell item")
     }
 }
