@@ -41,8 +41,9 @@ class SpreadsheetViewController: UIViewController {
         getFiles(withTabNumber: 0)          // 시트 내용 받아오기(valueRange)
         self.title = viewModel.fileName
         
-        spreadsheetView.register(SpreadsheetViewCell.self, forCellWithReuseIdentifier: SpreadsheetViewCell.identifier)
-        spreadsheetView.dataSource = self
+        // 밑 두 줄 위치 변경 예정. 부질없으면 돌려놔야지
+//        spreadsheetView.register(SpreadsheetViewCell.self, forCellWithReuseIdentifier: SpreadsheetViewCell.identifier)
+//        spreadsheetView.dataSource = self
         
         //let navController = UINavigationController(rootViewController: rootViewController)
         //navController.tabBarController?.tabBar.isHidden = true
@@ -102,6 +103,15 @@ class SpreadsheetViewController: UIViewController {
         
     
         // MARK: spreadsheet 추가 & constraint 설정
+        spreadsheetView.register(SpreadsheetViewCell.self, forCellWithReuseIdentifier: SpreadsheetViewCell.identifier)
+        // 임시처리. 최후의 수단
+        while !isSheetPropertyLoad {
+            if isSheetPropertyLoad {
+                spreadsheetView.dataSource = self
+                break
+            }
+        }
+        
         view.addSubview(spreadsheetView)
 //        spreadsheetView.frame = CGRect(x: 0, y: 0 , width: view.frame.size.width, height: view.frame.size.height)
         spreadsheetView.translatesAutoresizingMaskIntoConstraints = false
@@ -239,14 +249,18 @@ class SpreadsheetViewController: UIViewController {
             guard let properties = sheetsProperties else { return }
             self.viewModel.propertySheets = properties // propertySheets가 완성됨
             print("property sheets count: ", self.viewModel.propertySheets?.count)
-//            self.isSheetPropertyLoad = true
+            self.isSheetPropertyLoad = true
+            self.spreadsheetView.updateFocusIfNeeded()
             
+
             DispatchQueue.main.async {
                 self.tabCollectionView?.reloadData()
+                self.spreadsheetView.reloadData()
                 print("프로퍼티 받아오기 끝남(?)")
             }
         }
     }
+    
     
     // MARK: getFiles
     private func getFiles(withTabNumber tabNumber:Int) {
@@ -335,16 +349,19 @@ extension SpreadsheetViewController: SpreadsheetViewDataSource {
     
     // 셀 너비
     func spreadsheetView(_ spreadsheetView: SpreadsheetView, widthForColumn column: Int) -> CGFloat {
-        print("스프레드시트 넓이 정하기 시작")
+        // 0번째 열이면 column값을 35로 정함
         if column == 0 {
             return 35
         } else {
-            if let widthForColumn = viewModel.propertySheets![viewModel.currentSheetTab!].data!.first!.columnMetadata![column-1].pixelSize {
-                print("widthForColumn받아옴")
-                return CGFloat(widthForColumn)
-            } else { return 125 }
-            
-            return 125
+            // 1번째 열부터 셀 넓이 정하기
+            let columnMetadataCount = viewModel.propertySheets![viewModel.currentSheetTab!].data!.first!.columnMetadata?.count
+            if column <= columnMetadataCount! {
+                let widthForColumn = viewModel.propertySheets![viewModel.currentSheetTab!].data!.first!.columnMetadata![column-1].pixelSize
+                print(column-1, "번째 widthForColumn:", widthForColumn)
+                return CGFloat(widthForColumn!)
+            } else {
+                return 100
+            }
         }
     }
     
